@@ -8,12 +8,12 @@ This repository distributes production Windows installers, update packages, and 
 
 ## 📥 Download Latest Release
 
-👉 **[Download NextMove OMS v1.59 (Latest)](https://github.com/daksyfashion/nextmove-releases/releases/latest)**
+👉 **[Download NextMove OMS (Latest)](https://github.com/daksyfashion/nextmove-releases/releases/latest)**
 
 | Package | Installer File | Size | Purpose |
 | :--- | :--- | :--- | :--- |
-| **Full Setup (Offline)** | `NextMove_OMS_Version_1.59.exe` | ~280 MB | Complete self-contained setup with PostgreSQL, Redis & MinIO S3 included. |
-| **Update Setup (Lite)** | `NextMove_OMS_update_Version_1.59.exe` | ~15 MB | Fast update for systems with existing NextMove runtime installed. |
+| **Full Setup (Offline)** | [NextMove OMS.exe](https://github.com/daksyfashion/nextmove-releases/releases/latest) | Complete self-contained setup with PostgreSQL, Redis & MinIO S3 included. |
+| **Update Setup (Update)** | [NextMove OMS update.exe](https://github.com/daksyfashion/nextmove-releases/releases/latest) | Fast update for systems with existing NextMove runtime installed. |
 
 ---
 
@@ -28,7 +28,7 @@ This repository distributes production Windows installers, update packages, and 
 
 ## ⚡ Installation Guide
 
-1. Download **`NextMove_OMS_Version_1.59.exe`** from the [Releases](https://github.com/daksyfashion/nextmove-releases/releases) page.
+1. Download **`NextMove OMS.exe`** from the [Releases](https://github.com/daksyfashion/nextmove-releases/releases) page.
 2. Right-click the `.exe` and select **Run as Administrator**.
 3. **Select Data Storage Location**:
    - By default, NextMove OMS stores all database records and files in **`D:\NextMoveData`** *(or `C:\NextMoveData` if D:\ is unavailable)*.
@@ -65,8 +65,8 @@ NextMove OMS separates software binaries from your business database:
 ## 📞 Support & Documentation
 
 For setup assistance, enterprise deployment, or issue reporting:
-- **Website**: [https://nextmove.co.in](https://nextmove.co.in)
-- **Support Email**: support@nextmove.co.in
+- **Website**: 
+- **Support Email**: nexera.oms@gmail.com
 - **Repository Issues**: [Report an Issue](https://github.com/daksyfashion/nextmove-releases/issues)
 
 ---
