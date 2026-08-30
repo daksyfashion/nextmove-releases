@@ -29,11 +29,13 @@
    - [Synchronization Policies & Scheduler Settings](#synchronization-policies--scheduler-settings)
    - [Monitoring Sync Health & Execution Logs](#monitoring-sync-health--execution-logs)
 6. [Master Catalog & Inventory Configuration](#6-master-catalog--inventory-configuration)
-   - [Configuring GST Slabs & Tax Rules](#configuring-gst-slabs--tax-rules)
-   - [Creating Categories & Brands](#creating-categories--brands)
-   - [Creating Master Products](#creating-master-products)
-   - [Setting Up Combo & Bundle Products](#setting-up-combo--bundle-products)
-   - [Marketplace SKU Mapping & Resolving Unmapped SKUs](#marketplace-sku-mapping--resolving-unmapped-skus)
+   - [Step 6: Configuring GST Slabs & Tax Rules](#step-6-configuring-gst-slabs--tax-rules)
+   - [Step 7: Categories & Brands](#step-7-categories--brands)
+   - [Step 8: Creating Master Products](#step-8-creating-master-products)
+   - [Step 9: Setting Up Combo & Bundle Products](#step-9-setting-up-combo--bundle-products)
+   - [Step 10: Initial Stock Inwarding (Purchase Invoices)](#step-10-initial-stock-inwarding-purchase-invoices)
+   - [Step 11: Order Upload & Synchronization (PDF & CSV/XLSX)](#step-11-order-upload--synchronization-pdf--csvxlsx)
+   - [Step 12: Marketplace SKU Mapping & Resolving Unmapped SKUs](#step-12-marketplace-sku-mapping--resolving-unmapped-skus)
    - [Real-Time Stock Levels & Warehouse Stock Ledger](#real-time-stock-levels--warehouse-stock-ledger)
 7. [Warehouse & Multi-Location Management](#7-warehouse--multi-location-management)
    - [Configuring Warehouses](#configuring-warehouses)
@@ -548,7 +550,9 @@ Click **+ New Product** to open the product creator:
 
 ---
 
-### Setting Up Combo & Bundle Products
+---
+
+### Step 9: Setting Up Combo & Bundle Products
 
 📍 **Navigation:** **Inventory** → **Combos** (`/inventory/combos`)
 
@@ -560,9 +564,65 @@ If you sell multipacks (e.g., "Pack of 3 T-Shirts" or "Shoe + Socks Combo"), cre
 
 ---
 
-### Marketplace SKU Mapping & Resolving Unmapped SKUs
+### Step 10: Initial Stock Inwarding (Purchase Invoices)
 
-When orders are synced from Amazon, Meesho, or Flipkart, marketplaces send their own Channel SKUs. If a Channel SKU is not yet linked to a Master Product, NextMove OMS places it into the **Unmapped SKUs Queue**.
+📍 **Navigation:** **Invoices** → **Purchases** (`/invoices/purchases`)
+
+Before processing orders, populate your warehouse inventory on-hand:
+* Create a **Purchase Invoice** with your supplier name and cost prices.
+* Enable **Auto-Inward stock** to instantly increase sellable warehouse inventory and establish weighted average **COGS (Cost of Goods Sold)**. *(See [Section 8](#8-purchases-inwarding--cogs-tracking) for full purchase details).*
+
+---
+
+### Step 11: Order Upload & Synchronization (PDF & CSV/XLSX)
+
+📍 **Navigation:** **Orders** → **Upload** (`/orders/upload`)  
+*(Also accessible under **Marketplace** → **Meesho / Amazon / Flipkart** → **Uploads** tab)*
+
+NextMove OMS supports dual order intake: automated background API pulling as well as ultra-fast manual **PDF label batch** and **CSV/Excel order report** uploads.
+
+```
++-----------------------------------------------------------------------------------+
+|                              Upload Marketplace Orders                            |
++------------------------------------------+----------------------------------------+
+| Select Marketplace: [ Meesho Marketplace v] | Associated Company: [ Acme Retail v]|
+| Sub-Tab:           [ (●) Order Upload  ( ) Label Sorting                        ] |
+| Upload Format:     [ (●) PDF Label Batch    ( ) CSV / XLSX Order Sheet          ] |
++------------------------------------------+----------------------------------------+
+|                                                                                   |
+|         [ 📥 Drag & Drop PDF Shipping Labels or Excel Order Sheets Here ]         |
+|                     Supports .pdf, .csv, .xlsx (Up to 50MB)                       |
+|                                                                                   |
++-----------------------------------------------------------------------------------+
+|                                                 [ Cancel ]  [ Upload & Process ]  |
++-----------------------------------------------------------------------------------+
+```
+
+#### 1. PDF Label Batch Upload (Thermal 4x6 / A4 Labels)
+* **What to Upload:** Bulk shipping label PDF batches downloaded directly from Meesho Supplier Panel, Amazon Seller Central, or Flipkart Seller Hub.
+* **Intelligent Parsing Engine:** NextMove OMS automatically parses the PDF content and extracts:
+  - **Marketplace Order ID** & **Sub-Order IDs**
+  - **Customer / Buyer Name**, **Delivery Address**, **State**, and **Pincode**
+  - **Courier Partner** (Delhivery, Ekart, Shadowfax, Amazon Shipping, Ecom Express, etc.)
+  - **AWB / Tracking Number** & **Barcode data**
+  - **Marketplace Channel SKU** & **Order Item Quantity**
+* **Instant Order Creation:** Generates active order records in the system and stores the original thermal shipping label ready for warehouse printing.
+
+#### 2. CSV / XLSX Spreadsheet Upload (Marketplace Orders Reports)
+* **What to Upload:** Exported order report files from seller panels:
+  - **Meesho:** Orders CSV export file.
+  - **Amazon:** Unshipped Orders / All Orders report (`.txt`, `.csv`, `.xlsx`).
+  - **Flipkart:** Orders export spreadsheet (`.xlsx`, `.csv`).
+* **Auto-Column Mapping:** NextMove OMS automatically maps columns including Order ID, SKU, Quantity, Selling Price, Customer Details, Order Date, and Fulfillment Type.
+
+#### 3. Thermal Label Sorting Tool (Sub-Tab: Label Sorting)
+* When printing large batches of PDF labels, switch to the **Label Sorting** sub-tab to sort multi-page PDFs by **SKU**, **Courier Partner**, or **Destination City/Zone** before sending them to thermal printers.
+
+---
+
+### Step 12: Marketplace SKU Mapping & Resolving Unmapped SKUs
+
+When new orders are uploaded or synced from Amazon, Meesho, or Flipkart, marketplaces send their own Channel SKUs. If a Channel SKU is not yet linked to a Master Product, NextMove OMS places it into the **Unmapped SKUs Queue**.
 
 📍 **Navigation:** **Inventory** → **Unmapped SKUs** (`/inventory/unmapped`)
 
@@ -585,12 +645,13 @@ When orders are synced from Amazon, Meesho, or Flipkart, marketplaces send their
 1. Click **Map to Master** next to the unmapped channel SKU.
 2. Select the Master Product or Combo Product from the search dropdown.
 3. Click **Save Mapping**.
-4. **Instant Auto-Resolution:** All pending orders containing this Channel SKU are immediately linked, allocated stock from inventory, and moved to the Ready queue.
+4. **Instant Auto-Resolution:** All uploaded and pending orders containing this Channel SKU are **immediately linked**, allocated warehouse stock, and transitioned to the `READY_TO_SHIP` queue.
 
 > [!TIP]
 > **Bulk Mapping via CSV:** You can also download the sample mapping template via **Export Unmapped**, add the `masterSku` column, and upload it via **Bulk Upload Mapping** to map thousands of SKUs in seconds.
 
 ---
+
 
 ### Real-Time Stock Levels & Warehouse Stock Ledger
 
