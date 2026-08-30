@@ -24,6 +24,8 @@
    - [Connecting Amazon India](#connecting-amazon-india)
    - [Connecting Meesho Marketplace](#connecting-meesho-marketplace)
    - [Connecting Flipkart Seller Hub](#connecting-flipkart-seller-hub)
+   - [Post-Integration Page Refresh & Channel Sub-Menus](#post-integration-page-refresh--channel-sub-menus)
+   - [Importing Standard Marketplace Datasets (Closing Fees, Commissions & Shipping)](#importing-standard-marketplace-datasets-closing-fees-commissions--shipping)
    - [Synchronization Policies & Scheduler Settings](#synchronization-policies--scheduler-settings)
    - [Monitoring Sync Health & Execution Logs](#monitoring-sync-health--execution-logs)
 6. [Master Catalog & Inventory Configuration](#6-master-catalog--inventory-configuration)
@@ -390,6 +392,53 @@ NextMove OMS integrates directly with **Meesho Marketplace**, **Amazon India SP-
 
 ---
 
+### Post-Integration Page Refresh & Channel Sub-Menus
+
+> [!IMPORTANT]
+> **Refresh Page to Unlock Channel Sub-Menus:**
+> After adding your integration accounts, **refresh your browser (`F5` or `Ctrl + R`)**. 
+> NextMove OMS dynamically queries your connected channels and automatically reveals the dedicated channel management tabs in the left sidebar:
+> * **Marketplace → Meesho** (`/marketplace/meesho`)
+> * **Marketplace → Amazon** (`/marketplace/amazon`)
+> * **Marketplace → Flipkart** (`/marketplace/flipkart`)
+
+---
+
+### Importing Standard Marketplace Datasets (Closing Fees, Commissions & Shipping)
+
+To enable automatic financial reconciliation and fee variance audits, import the pre-configured statutory marketplace fee structures:
+
+#### 1. Import Closing Fee Dataset
+📍 **Direct URL:** [`http://localhost:3030/marketplace/closing-fees/import`](http://localhost:3030/marketplace/closing-fees/import)  
+*(Or navigate to **Marketplace** → **Amazon / Flipkart / Meesho** → **Closing fees** tab → click **Import Closing Fee Dataset**)*
+
+1. Click **[Import Closing Fee Dataset](http://localhost:3030/marketplace/closing-fees/import)**.
+2. Select your marketplace channel (**Amazon**, **Flipkart**, or **Meesho**).
+3. If using Amazon, select the active running dataset matching your seller account fulfillment model (e.g., **Easy Ship**, **FBA**, or **Self Ship**).
+4. Review the price bracket slabs (e.g., ₹0–₹250, ₹251–₹500, ₹501–₹1,000, >₹1,000) and click **Import Selected Rules**.
+
+#### 2. Import Category Commission Slabs
+📍 **Direct URL:** [`http://localhost:3030/marketplace/commission/import`](http://localhost:3030/marketplace/commission/import)  
+*(Or navigate to **Marketplace** → **Commission** → click **Import Categories**)*
+
+1. Click **[Import Categories](http://localhost:3030/marketplace/commission/import)**.
+2. Select the marketplace channel (`Amazon`, `Meesho`, `Flipkart`).
+3. Select your product verticals (e.g., *Men's Fashion, Footwear, Mobile Accessories, Home Decor*).
+4. Review the standard category commission percentage slabs and fixed fee rules.
+5. Click **Import Selected Categories & Rules**.
+
+#### 3. Import Shipping Rate Cards Dataset
+📍 **Direct URL:** [`http://localhost:3030/marketplace/shipping/import`](http://localhost:3030/marketplace/shipping/import)  
+*(Or navigate to **Marketplace** → **Shipping** → click **Import Shipping Dataset**)*
+
+1. Click **[Import Shipping Dataset](http://localhost:3030/marketplace/shipping/import)**.
+2. Choose the relevant shipping rule dataset for your marketplace and courier model (e.g., **Amazon Easy Ship Standard / Prime**, **Flipkart Express**, **Meesho Direct**).
+3. Review weight slab tiers (0–500g, 500g–1kg, extra kg increments) across **Local**, **Regional**, and **National** delivery zones.
+4. Click **Import Selected Shipping Rules**.
+
+---
+
+
 ### Synchronization Policies & Scheduler Settings
 
 Navigate to **Marketplace** → **Settings** (`/marketplace/settings`) to configure automated background synchronization policies:
@@ -442,11 +491,11 @@ graph LR
 
 ---
 
-### Configuring GST Slabs & Tax Rules
+### Step 6: Configuring GST Slabs & Tax Rules
 
 📍 **Navigation:** **Inventory** → **GST rules** (`/inventory/gst`)
 
-Configure standard Indian GST rates:
+Configure standard Indian GST rates before creating products:
 1. Click **+ Add GST Rule**.
 2. **Rule Name**: E.g., `Apparel Below 1000 (5%)` or `Standard Goods (18%)`.
 3. **HSN Code**: 4 to 8 digit HSN code (e.g., `6109` for T-Shirts, `6403` for Footwear).
@@ -455,19 +504,24 @@ Configure standard Indian GST rates:
 
 ---
 
-### Creating Categories & Brands
+### Step 7: Categories & Brands
 
 📍 **Navigation:** **Inventory** → **Categories** (`/inventory/categories`)
 
-Organize your catalog by creating hierarchy categories (e.g., `Men's Fashion` → `T-Shirts`, `Electronics` → `Mobile Accessories`).
+> [!TIP]
+> **Auto-Created Categories from Commission Import:**
+> If you already completed **Step 4: Import Category Commission Slabs** (`/marketplace/commission/import`), all standard internal and marketplace category hierarchies are **already automatically created and available** for your products!
+> 
+> You can also manually add custom categories or brands at any time by clicking **+ Add Category** (e.g., `Men's Fashion` → `T-Shirts`, `Electronics` → `Mobile Accessories`).
 
 ---
 
-### Creating Master Products
+### Step 8: Creating Master Products
 
 📍 **Navigation:** **Inventory** → **Products** (`/inventory/products`)
 
 Click **+ New Product** to open the product creator:
+
 
 ```
 +-----------------------------------------------------------------------------------+
@@ -958,31 +1012,47 @@ NextMove OMS features an automated update engine connected to official GitHub re
 
 ## 17. Recommended Setup Sequence & Dependencies
 
-To ensure a smooth setup, follow this workflow:
+To ensure zero errors and seamless automation, configure your NextMove OMS following this exact **Step-by-Step Sequence**:
 
 ```mermaid
 graph TD
-    Step1["Step 1: Install NextMove OMS & Register Admin Account"] --> Step2["Step 2: Create Company Profile & Invoice Prefixes"]
-    Step2 --> Step3["Step 3: Connect Marketplace Accounts (Amazon, Meesho, Flipkart)"]
-    Step3 --> Step4["Step 4: Configure GST Rules, Categories & Master Products"]
-    Step4 --> Step5["Step 5: Inward Initial Stock via Purchase Invoice"]
-    Step5 --> Step6["Step 6: Map Marketplace SKUs in Unmapped Queue"]
-    Step6 --> Step7["Step 7: Start Processing Orders, Printing Labels & Shipping"]
-    Step7 --> Step8["Step 8: Process Returns, Settlements & Reconciliation"]
+    Step1["Step 1: Company Setup<br/>(/marketplace/companies)"] --> Step2["Step 2: Marketplace Integrations & Refresh<br/>(/marketplace/integrations)"]
+    Step2 --> Step3["Step 3: Closing Fees Import<br/>(/marketplace/closing-fees/import)"]
+    Step3 --> Step4["Step 4: Commission Import<br/>(/marketplace/commission/import)"]
+    Step4 --> Step5["Step 5: Shipping Rules Import<br/>(/marketplace/shipping/import)"]
+    Step5 --> Step6["Step 6: GST Rules Setup<br/>(/inventory/gst)"]
+    Step6 --> Step7["Step 7: Categories & Brands<br/>(Auto-created from Step 4 Commission import)"]
+    Step7 --> Step8["Step 8: Master Products<br/>(/inventory/products)"]
+    Step8 --> Step9["Step 9: Combo Products<br/>(/inventory/combos)"]
+    Step9 --> Step10["Step 10: Purchase Invoices & Inwarding<br/>(/invoices/purchases)"]
+    Step10 --> Step11["Step 11: Order Upload / API Sync<br/>(/orders/upload & /orders)"]
+    Step11 --> Step12["Step 12: SKU Mapping<br/>(/inventory/unmapped)"]
+    Step12 --> Step13["Step 13: Shipping & Thermal Labels<br/>(/shipping/ready & /shipping/labels)"]
+    Step13 --> Step14["Step 14: Returns & Reconciliation<br/>(/returns & /payments/reconciliation)"]
 ```
 
-### Setup Dependency Matrix:
+### Complete Setup Sequence & Dependency Matrix:
 
-| Sequence | Module / Step | Depends On | Why It Is Required |
-| :---: | :--- | :--- | :--- |
-| **1** | **Windows Installer & Admin Sign In** | None | Establishes local database and organization workspace. |
-| **2** | **Company Setup (`/marketplace/companies`)** | Step 1 | Marketplace stores must belong to a legal company entity. |
-| **3** | **Marketplace Integrations (`/marketplace/integrations`)** | Step 2 | Enables automated order pulling and inventory publishing. |
-| **4** | **GST Rules & Master Products (`/inventory/products`)** | Step 2 | Master SKUs are required to map channel listings and calculate GST. |
-| **5** | **Purchase Invoices / Inwarding (`/invoices/purchases`)** | Step 4 | Populates initial on-hand stock and establishes COGS. |
-| **6** | **SKU Mapping (`/inventory/unmapped`)** | Steps 3 & 4 | Links incoming marketplace SKUs to Master Products for auto-allocation. |
-| **7** | **Orders & Shipping (`/orders` & `/shipping/ready`)** | Steps 5 & 6 | Orders require stock and SKU mapping to generate labels and manifests. |
-| **8** | **Returns & Reconciliation (`/returns` & `/payments`)** | Step 7 | Reconciles delivered shipments against bank remittances and return parcels. |
+| Step # | Setup Module | Direct Route / URL | Depends On | Purpose & Details |
+| :---: | :--- | :--- | :--- | :--- |
+| **0** | **Admin Sign In & Org** | `/login` / `/register` | None | Establishes your local database and admin workspace. |
+| **1** | **Company Setup** | `/marketplace/companies` | Step 0 | Creates your legal entity, GSTIN, PAN, and sequential invoice series prefixes (`Sales`, `Purchase`, `Credit Note`, `Debit Note`). |
+| **2** | **Marketplace Integration** | `/marketplace/integrations` | Step 1 | Connects Amazon, Meesho, and Flipkart accounts. **Refresh the browser (`F5`)** after adding accounts to reveal channel submenus. |
+| **3** | **Closing Fees Import** | `/marketplace/closing-fees/import` | Step 2 | Imports running closing fee price bracket slabs (e.g. Amazon Easy Ship, FBA, Flipkart, Meesho) for automated fee deduction audits. |
+| **4** | **Commission Slabs Import** | `/marketplace/commission/import` | Step 2 | Imports category-level percentage commission rates and fixed fees for all connected marketplace channels. |
+| **5** | **Shipping Rules Import** | `/marketplace/shipping/import` | Step 2 | Imports official courier rate cards (weight tiers 500g, 1kg, etc. across Local, Regional, and National delivery zones). |
+| **6** | **GST Rules Setup** | `/inventory/gst` | Step 1 | Sets up Indian GST tax slabs (`5%`, `12%`, `18%`, `28%`) with CGST/SGST and IGST rules. |
+| **7** | **Categories & Brands** | `/inventory/categories` | Step 4 | **Auto-Created:** Categories imported in Step 4 are already available! You can also add custom categories/brands. |
+| **8** | **Master Products** | `/inventory/products` | Steps 6 & 7 | Creates physical master items with Master SKU, Barcode, HSN, Cost Price, MRP, Selling Price, Weight, and Tax slab. |
+| **9** | **Combo Products** | `/inventory/combos` | Step 8 | Bundles multiple master items into combo multipacks with component stock ratios. |
+| **10** | **Purchase Invoices / Inwarding** | `/invoices/purchases` | Steps 8 & 9 | Inwards supplier stock into warehouse inventory and calculates weighted average **Cost of Goods Sold (COGS)**. |
+| **11** | **Order Upload / Sync** | `/orders/upload`, `/orders` | Steps 2 & 10 | Pulls live orders via marketplace API or imports thermal PDF label batches / CSV order sheets. |
+| **12** | **Marketplace SKU Mapping** | `/inventory/unmapped` | Steps 8, 9, 11 | Maps unmapped channel SKUs from newly uploaded orders to Master/Combo SKUs to auto-allocate stock. |
+| **13** | **Shipping, Labels & Manifests** | `/shipping/ready`, `/shipping/labels` | Steps 10 & 12 | Moves mapped orders to Ready queue, prints 4x6 thermal shipping labels, and generates courier handover manifests. |
+| **14** | **Returns & Reconciliation** | `/returns`, `/payments` | Steps 3, 4, 5, 13 | QC grades customer/RTO returns, imports settlement files, and performs 3-way financial reconciliation. |
+
+
+
 
 ---
 
