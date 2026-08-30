@@ -349,6 +349,15 @@ NextMove OMS integrates directly with **Meesho Marketplace**, **Amazon India SP-
 +-----------------------------------------------------------------------------------+
 ```
 
+> [!TIP]
+> **Don't Have Marketplace API Credentials Yet? (Local Access & Manual Mode)**
+> If you do not have marketplace developer API keys yet, or you are testing NextMove OMS locally and want to use manual **PDF shipping label uploads** and **CSV/Excel order sheets**, you can enter **any random or dummy text** in the credentials fields:
+> * **Merchant ID / Seller ID:** e.g. `TEST-SELLER-01`
+> * **API Key / Client ID:** e.g. `TEST_API_KEY`
+> * **API Secret Token:** e.g. `TEST_API_SECRET`
+>
+> Entering placeholder credentials will successfully create and activate the marketplace channel account in NextMove OMS. This immediately unlocks the sidebar channel sub-menus (`/marketplace/amazon`, `/marketplace/meesho`, `/marketplace/flipkart`), batch label processing, manual order importing, SKU mapping, stock management, and reconciliation workflows.
+
 #### Where to Obtain Amazon SP-API Credentials:
 1. Log in to [Amazon Seller Central India](https://sellercentral.amazon.in/).
 2. Navigate to **Partner Network** → **Develop Apps**.
